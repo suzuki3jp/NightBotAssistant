@@ -2,5 +2,12 @@
 temp/
 .env
 
+# test
+test/package.json
+test/package-lock.json
+
 # node.js
 node_modules/
+
+# svelte
+.svelte-kit/

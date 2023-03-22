@@ -22,6 +22,9 @@ const generateOptions = (): {
     discordOptions: DiscordOptions;
     nightbotOptions: { clientInfo: ClientInfo; tokenInfo: TokenInfo };
 } => {
+    if (!isValidEnv()) {
+        throw new Error('Invalid .env');
+    }
     return {
         discordOptions: {
             intents: Object.values(Intents.FLAGS),

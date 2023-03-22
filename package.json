@@ -1,0 +1,28 @@
+{
+  "name": "nighbotassistant",
+  "version": "1.0.0",
+  "description": "- [NightBot](https://nightbot.tv) custom commands can be changed from the GUI on discord.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suzuki3jp/git-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suzuki3jp/git-template/issues"
+  },
+  "homepage": "https://github.com/suzuki3jp/git-template#readme",
+  "dependencies": {
+    "discord.js": "^13.14.0",
+    "dotenv": "^16.0.3",
+    "nightbot.js": "^0.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.6",
+    "typescript": "^5.0.2"
+  }
+}

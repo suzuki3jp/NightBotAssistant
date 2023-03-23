@@ -1,3 +1,4 @@
+import { Env } from '@suzuki3jp/utils';
 import { Client as NightBotAPI, AuthManager, ClientInfo, TokenInfo } from 'nightbot.js';
 import { Client as Discord, ClientOptions as DiscordOptions, Intents } from 'discord.js';
 import dotenv from 'dotenv';
@@ -9,10 +10,19 @@ import {
     typeGuardNightBotRefreshToken,
     typeGuardNightBotToken,
     typeGuardRedirectUri,
+    typeGuardDiscordToken,
 } from './index';
+import { DataManager } from '../class/DataManager';
 
-const { NIGHTBOT_CLIENT_ID, NIGHTBOT_CLIENT_SECRET, NIGHTBOT_REDIRECT_URI, NIGHTBOT_TOKEN, NIGHTBOT_REFRESH_TOKEN } =
-    process.env;
+const DM = new DataManager();
+const {
+    DISCORD_TOKEN,
+    NIGHTBOT_CLIENT_ID,
+    NIGHTBOT_CLIENT_SECRET,
+    NIGHTBOT_REDIRECT_URI,
+    NIGHTBOT_TOKEN,
+    NIGHTBOT_REFRESH_TOKEN,
+} = process.env;
 
 export const generateClients = (): { discord: Discord; nightbot: NightBotAPI } => {
     const options = generateOptions();
@@ -31,6 +41,7 @@ const generateOptions = (): {
     discordOptions: DiscordOptions;
     nightbotOptions: { clientInfo: ClientInfo; tokenInfo: TokenInfo };
 } => {
+    if (!typeGuardDiscordToken(DISCORD_TOKEN)) throw new Error('Invalid .env');
     if (!typeGuardClientId(NIGHTBOT_CLIENT_ID)) throw new Error('Invalid .env');
     if (!typeGuardClientSecret(NIGHTBOT_CLIENT_SECRET)) throw new Error('Invalid .env');
     if (!typeGuardRedirectUri(NIGHTBOT_REDIRECT_URI)) throw new Error('Invalid .env');
@@ -51,6 +62,19 @@ const generateOptions = (): {
             tokenInfo: {
                 accessToken: NIGHTBOT_TOKEN,
                 refreshToken: NIGHTBOT_REFRESH_TOKEN,
+                onRefresh: (tokenInfo) => {
+                    const newEnv = {
+                        DISCORD_TOKEN: DISCORD_TOKEN,
+                        NIGHTBOT_CLIENT_ID: NIGHTBOT_CLIENT_ID,
+                        NIGHTBOT_CLIENT_SECRET: NIGHTBOT_CLIENT_SECRET,
+                        NIGHTBOT_REDIRECT_URI: NIGHTBOT_REDIRECT_URI,
+                        NIGHTBOT_TOKEN: tokenInfo.accessToken,
+                        NIGHTBOT_REFRESH_TOKEN: tokenInfo.refreshToken,
+                    };
+                    DM.setEnv(Env.parseToEnv(newEnv));
+                    console.log('token refreshed!');
+                    return;
+                },
             },
         },
     };

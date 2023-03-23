@@ -3,7 +3,16 @@ import { Client as Discord, ClientOptions as DiscordOptions, Intents } from 'dis
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { isValidEnv } from './index';
+import {
+    typeGuardClientId,
+    typeGuardClientSecret,
+    typeGuardNightBotRefreshToken,
+    typeGuardNightBotToken,
+    typeGuardRedirectUri,
+} from './index';
+
+const { NIGHTBOT_CLIENT_ID, NIGHTBOT_CLIENT_SECRET, NIGHTBOT_REDIRECT_URI, NIGHTBOT_TOKEN, NIGHTBOT_REFRESH_TOKEN } =
+    process.env;
 
 export const generateClients = (): { discord: Discord; nightbot: NightBotAPI } => {
     const options = generateOptions();
@@ -22,9 +31,12 @@ const generateOptions = (): {
     discordOptions: DiscordOptions;
     nightbotOptions: { clientInfo: ClientInfo; tokenInfo: TokenInfo };
 } => {
-    if (!isValidEnv()) {
-        throw new Error('Invalid .env');
-    }
+    if (!typeGuardClientId(NIGHTBOT_CLIENT_ID)) throw new Error('Invalid .env');
+    if (!typeGuardClientSecret(NIGHTBOT_CLIENT_SECRET)) throw new Error('Invalid .env');
+    if (!typeGuardRedirectUri(NIGHTBOT_REDIRECT_URI)) throw new Error('Invalid .env');
+    if (!typeGuardNightBotToken(NIGHTBOT_TOKEN)) throw new Error('Invalid .env');
+    if (!typeGuardNightBotRefreshToken(NIGHTBOT_REFRESH_TOKEN)) throw new Error('Invalid .env');
+
     return {
         discordOptions: {
             intents: Object.values(Intents.FLAGS),
@@ -32,13 +44,13 @@ const generateOptions = (): {
         },
         nightbotOptions: {
             clientInfo: {
-                clientId: process.env.NIGHTBOT_CLIENT_ID,
-                clientSecret: process.env.NIGHTBOT_CLIENT_SECRET,
-                redirectUri: process.env.NIGHTBOT_REDIRECT_URI,
+                clientId: NIGHTBOT_CLIENT_ID,
+                clientSecret: NIGHTBOT_CLIENT_SECRET,
+                redirectUri: NIGHTBOT_REDIRECT_URI,
             },
             tokenInfo: {
-                accessToken: process.env.NIGHTBOT_TOKEN,
-                refreshToken: process.env.NIGHTBOT_REFRESH_TOKEN,
+                accessToken: NIGHTBOT_TOKEN,
+                refreshToken: NIGHTBOT_REFRESH_TOKEN,
             },
         },
     };

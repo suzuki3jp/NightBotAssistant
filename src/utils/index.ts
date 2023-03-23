@@ -1,2 +1,10 @@
 export { generateClients } from './client';
-export { isValidEnv } from './env';
+export {
+    isValidEnv,
+    typeGuardDiscordToken,
+    typeGuardClientId,
+    typeGuardClientSecret,
+    typeGuardNightBotRefreshToken,
+    typeGuardNightBotToken,
+    typeGuardRedirectUri,
+} from './env';

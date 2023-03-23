@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/suzuki3jp/git-template#readme",
   "dependencies": {
+    "@suzuki3jp/utils": "^3.3.0",
     "discord.js": "^13.14.0",
     "dotenv": "^16.0.3",
     "nightbot.js": "^0.1.0"

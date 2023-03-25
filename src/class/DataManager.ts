@@ -1,15 +1,23 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
+import { JsonTypes, ConfigJson } from './JsonTypes';
+
 export class DataManager {
     public paths: {
+        config: string;
         env: string;
     };
 
     constructor() {
         this.paths = {
+            config: resolve(__dirname, '../../data/config.json'),
             env: resolve(__dirname, '../../.env'),
         };
+    }
+
+    getConfig(): ConfigJson {
+        return this._readFile(this.paths.config);
     }
 
     setEnv(data: string) {

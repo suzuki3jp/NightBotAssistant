@@ -12,13 +12,22 @@ export class Base {
     public discordToken: string;
     public DM: DataManager;
 
-    constructor() {
-        this.logger = new Logger(false);
-        const { discord, nightbot } = generateClients(this.logger);
-        if (!typeGuardDiscordToken(process.env.DISCORD_TOKEN)) throw new Error('Invalid .env');
-        this.discord = discord;
-        this.nightbot = nightbot;
-        this.discordToken = process.env.DISCORD_TOKEN;
-        this.DM = new DataManager();
+    constructor(base?: Base) {
+        if (base) {
+            this.discord = base.discord;
+            this.nightbot = base.nightbot;
+            this.logger = base.logger;
+            this.discordToken = base.discordToken;
+            this.DM = base.DM;
+        } else {
+            if (!typeGuardDiscordToken(process.env.DISCORD_TOKEN)) throw new Error('Invalid .env');
+
+            this.logger = new Logger(false);
+            const { discord, nightbot } = generateClients(this.logger);
+            this.discord = discord;
+            this.nightbot = nightbot;
+            this.discordToken = process.env.DISCORD_TOKEN;
+            this.DM = new DataManager();
+        }
     }
 }

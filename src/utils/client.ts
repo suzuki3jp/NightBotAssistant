@@ -1,3 +1,4 @@
+import { Logger } from '@suzuki3jp/logger';
 import { Env } from '@suzuki3jp/utils';
 import { Client as NightBotAPI, AuthManager, ClientInfo, TokenInfo } from 'nightbot.js';
 import { Client as Discord, ClientOptions as DiscordOptions, Intents } from 'discord.js';
@@ -24,8 +25,8 @@ const {
     NIGHTBOT_REFRESH_TOKEN,
 } = process.env;
 
-export const generateClients = (): { discord: Discord; nightbot: NightBotAPI } => {
-    const options = generateOptions();
+export const generateClients = (logger: Logger): { discord: Discord; nightbot: NightBotAPI } => {
+    const options = generateOptions(logger);
     return {
         discord: new Discord(options.discordOptions),
         nightbot: new NightBotAPI(
@@ -37,7 +38,9 @@ export const generateClients = (): { discord: Discord; nightbot: NightBotAPI } =
     };
 };
 
-const generateOptions = (): {
+const generateOptions = (
+    logger: Logger
+): {
     discordOptions: DiscordOptions;
     nightbotOptions: { clientInfo: ClientInfo; tokenInfo: TokenInfo };
 } => {
@@ -72,7 +75,7 @@ const generateOptions = (): {
                         NIGHTBOT_REFRESH_TOKEN: tokenInfo.refreshToken,
                     };
                     DM.setEnv(Env.parseToEnv(newEnv));
-                    console.log('token refreshed!');
+                    logger.system('Nightbot token has been refreshed.');
                     return;
                 },
             },
